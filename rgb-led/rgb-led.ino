@@ -2,7 +2,9 @@ int redPin = 7;
 int greenPin = 6;
 int bluePin = 5;
 int max = 360;
-int hue = 50;
+float hue = 0;
+float step = 0.1;
+int loopDelay = 10;
 
 struct RGB {
     float r;
@@ -11,32 +13,32 @@ struct RGB {
 };
 
 void setup() {
-    Serial.begin(9600);
+//    Serial.begin(9600);
     pinMode(redPin, OUTPUT);
     pinMode(greenPin, OUTPUT);
     pinMode(bluePin, OUTPUT);
-    Serial.println("setup");
+//    Serial.println("setup");
 }
 
 void loop() {
-    Serial.print("hue: ");
-    Serial.println(hue, HEX);
+//    Serial.print("hue: ");
+//    Serial.println(hue, HEX);
 
     // convert to rgb
     struct RGB rgb = hsv2rgb(hue, 1, 1);
-    Serial.print("r: ");
-    Serial.print(rgb.r);
-    Serial.print(", g: ");
-    Serial.print(rgb.g);
-    Serial.print(", b: ");
-    Serial.println(rgb.b);
+//    Serial.print("r: ");
+//    Serial.print(rgb.r);
+//    Serial.print(", g: ");
+//    Serial.print(rgb.g);
+//    Serial.print(", b: ");
+//    Serial.println(rgb.b);
 
     // set color
     setColor(rgb.r, rgb.g, rgb.b);
 
     // increment color
-    hue = (hue >= max) ? 0 : hue + 1;
-    delay(10);
+    hue = (hue >= max) ? 0 : hue + step;
+    delay(loopDelay);
 }
 
 void setColor(int r, int g, int b) {
