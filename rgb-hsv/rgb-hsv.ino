@@ -29,14 +29,6 @@ void loop() {
   delay(10);
 }
 
-RGB sineRgb(float hue) {
-  return {
-    .r = max(0, sin(hue * DEG_TO_RAD) * 255),
-    .g = max(0, sin((hue + 120) * DEG_TO_RAD) * 255),
-    .b = max(0, sin((hue + 240) * DEG_TO_RAD) * 255)
-  };
-}
-
 /**
  * Converts an HSV color value to RGB. Conversion formula
  * adapted from http://en.wikipedia.org/wiki/HSV_color_space.
@@ -65,5 +57,9 @@ RGB hsvToRgb(float h, float s, float v) {
     case 5: r = v, g = p, b = q; break;
   }
 
-  return { .r = r * 255, .g = g * 255, .b = b * 255 };
+  return {
+    .r = r * 255,
+    .g = g * 255,
+    .b = b * 255
+  };
 }
