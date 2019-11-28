@@ -142,7 +142,7 @@ void saturationDown() {
 
 void writeToRgbLed() {
   if (play) {
-    hueUp(0.001);
+    hueUp(0.0001);
   }
   RGB rgb = hsvToRgb(hue, saturation, value);
   analogWrite(redPin, rgb.r);
