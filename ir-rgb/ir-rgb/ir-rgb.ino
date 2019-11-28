@@ -106,9 +106,13 @@ void readIRRemoteKey() {
   }
 }
 
-void hueUp() {
+void hueUp(float step) {
   Serial.println("hueUp");
-  hue = hue >= 1 ? 0.01 : hue + 0.01;
+  hue = hue >= 1 ? step : hue + step;
+}
+
+void hueUp() {
+  hueUp(0.01);
 }
 
 void hueDown() {
@@ -138,8 +142,7 @@ void saturationDown() {
 
 void writeToRgbLed() {
   if (play) {
-    hueUp();
-    delay(100);
+    hueUp(0.001);
   }
   RGB rgb = hsvToRgb(hue, saturation, value);
   analogWrite(redPin, rgb.r);
