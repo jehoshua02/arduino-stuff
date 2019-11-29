@@ -14,6 +14,7 @@ float hue = 0;
 float saturation = 1;
 float value = 1;
 bool play = true;
+const int playPin = 3;
 
 struct RGB {
     float r, g, b;
@@ -34,6 +35,7 @@ void setupRGBLED() {
   pinMode(redPin, OUTPUT);
   pinMode(greenPin, OUTPUT);
   pinMode(bluePin, OUTPUT);
+  pinMode(playPin, OUTPUT);
 }
 
 void loop() {
@@ -97,17 +99,16 @@ void readIRRemoteKey() {
         break;
       case 0xFF52AD: // "9"
         break;
+      default:
+        Serial.println(results.value, HEX);
     }
     key_value = results.value;
     irrecv.resume();
-    Serial.println(hue);
-    Serial.println(saturation);
-    Serial.println(value);
   }
 }
 
 void hueUp(float step) {
-  Serial.println("hueUp");
+  // Serial.println("hueUp");
   hue = hue >= 1 ? step : hue + step;
 }
 
@@ -142,7 +143,10 @@ void saturationDown() {
 
 void writeToRgbLed() {
   if (play) {
-    hueUp(0.0001);
+    hueUp(0.00001);
+    analogWrite(playPin, 255);
+  } else {
+    analogWrite(playPin, 0);
   }
   RGB rgb = hsvToRgb(hue, saturation, value);
   analogWrite(redPin, rgb.r);
@@ -151,6 +155,7 @@ void writeToRgbLed() {
 }
 
 void playToggle() {
+  Serial.println("playToggle");
   play = !play;
 }
 
