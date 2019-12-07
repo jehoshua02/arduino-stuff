@@ -1,40 +1,32 @@
-const int xpin = A0;
-const int ypin = A1;
-const int zpin = A2;
+const int xpin = A3;
+const int ypin = A2;
+const int zpin = A1;
+const int powerpin = A4;
+const int groundpin = A0;
 
 void setup() {
   Serial.begin(9600);
   Serial.println("x,y,z");
+  pinMode(powerpin, OUTPUT);
+  pinMode(groundpin, OUTPUT);
+  digitalWrite(powerpin, HIGH);
+  digitalWrite(groundpin, LOW);
 }
 
 void loop() {
-  double x = readX();
-  double y = readY();
-  double z = readZ();
+  double x = readAxis(xpin);
+  double y = readAxis(ypin);
+  double z = readAxis(zpin);
 
   print(x, y, z);
 
   delay(100);
 }
 
-double readX() {
+double readAxis(int pin) {
   int offset = 325;
   double max = 65.0;
-  double value = (analogRead(xpin) - offset) / max;
-  return max(min(value, 1), -1);
-}
-
-double readY() {
-  int offset = 325;
-  double max = 65.0;
-  double value = (analogRead(ypin) - offset) / max;
-  return max(min(value, 1), -1);
-}
-
-double readZ() {
-  int offset = 325;
-  double max = 65.0;
-  double value = (analogRead(zpin) - offset) / max;
+  double value = (analogRead(pin) - offset) / max;
   return max(min(value, 1), -1);
 }
 
