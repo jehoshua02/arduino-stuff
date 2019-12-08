@@ -14,6 +14,7 @@ int bluePin = 11;
 
 // CONFIGURATION
 
+float loopDelay = 50;
 float tiltThreshold = 0.4;
 float hueStep = 0.003;
 float strobeStep = 0.01;
@@ -67,7 +68,7 @@ void loop() {
   print(y, h, v);
   writeRGB(rgb);
 
-  delay(50);
+  delay(loopDelay);
 }
 
 // INPUT
