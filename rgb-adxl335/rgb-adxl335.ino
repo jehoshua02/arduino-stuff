@@ -15,11 +15,16 @@ int bluePin = 11;
 // CONFIGURATION
 
 float tiltThreshold = 0.4;
-float hueStep = 0.01;
+float hueStep = 0.003;
+float strobeStep = 0.01;
+float strobeAmplitude = 7.0 / 8.0;
 
 // STATE
 
 float h = 0;
+float v = 1;
+float strobePhase = 0;
+float isStrobing = 1;
 
 struct RGB {
     float r, g, b;
@@ -33,7 +38,7 @@ void setup() {
   setupADXL335();
   setupRGBLED();
 
-  Serial.println("y,h");
+  Serial.println("y,h,v");
 }
 
 void setupADXL335() {
@@ -55,13 +60,14 @@ void loop() {
 
   // calculation
   float h = calculateHue(y);
-  RGB rgb = hsvToRgb(h, 1, 1);
+  float v = calculateValue();
+  RGB rgb = hsvToRgb(h, 1, v);
 
   // output
-  print(y, h);
+  print(y, h, v);
   writeRGB(rgb);
 
-  delay(100);
+  delay(50);
 }
 
 // INPUT
@@ -79,11 +85,24 @@ float calculateHue(float tilt) {
   if (abs(tilt) >= tiltThreshold) {
     float m = tilt / abs(tilt) * ((abs(tilt) - tiltThreshold) / (1 - tiltThreshold));
     h = h + hueStep * m;
+    isStrobing = false;
+  } else {
+    isStrobing = true;
   }
 
   h = h - floor(h);
 
   return h;
+}
+
+float calculateValue() {
+  if (isStrobing) {
+    strobePhase = strobePhase >= 1 ? 0 : strobePhase + strobeStep;
+    v = strobeAmplitude * ((sin(strobePhase * 360 * DEG_TO_RAD) + 1) / 2) + (1 - strobeAmplitude);
+  } else {
+    v = 1;
+  }
+  return v;
 }
 
 RGB hsvToRgb(float h, float s, float v) {
@@ -112,10 +131,12 @@ RGB hsvToRgb(float h, float s, float v) {
 
 // OUTPUT
 
-void print(float y, float h) {
+void print(float y, float h, float v) {
   Serial.print(y, 4);
   Serial.print(",");
   Serial.print(h, 4);
+  Serial.print(",");
+  Serial.print(v, 4);
   Serial.println();
 }
 
